@@ -1,4 +1,44 @@
-// t1e.js v2 any charset + old browsers! (qwen.ai + XingSoft*2025)
+g_htm=`
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="windows-1251"> <!-- специально НЕ UTF-8, чтобы проверить сущности! -->
+  <title>Translit1E — Новый транслит для русских букв</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .mode-btn { padding: 8px 16px; margin: 5px; font-size: 16px; }
+    .test-block { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+
+<h1 id="id_str">~Privet! Eto Translit1E. Dl9~ (No JS + No rus font)</h1>
+
+<button class="mode-btn" onclick="decode_text()"> decode t1e-rus</button>
+<button class="mode-btn" onclick="encode_text()"> encode rus-t1e</button>
+
+<button class="mode-btn" onclick="testAlert()"> test alert()</button>
+
+<h2>Здесь какой то обычный текст и он зависит от кодировки</h2>
+
+<div class="test-block">
+  <h3>unicode (any charset)</h3>
+  <p id="id_put1">1</p>
+</div>
+
+<div class="test-block">
+  <h3>html-znaki (any charset)</h3>
+  <p id="id_put2">2</p>
+</div>
+
+<div class="test-block">
+<textarea id="id_input" rows="3" cols="60">
+~Privet! ~123~-1Exik, ~cut~, 1Wuka i Qla ~~ kak xizn6? 13to Translit1E: 14to za4em!~
+</textarea><br>
+</div>
+
+<script>
+// t1e.js
 var T1E = (function () {
   var cyrToCode = {
     1072: 'a',   1073: 'b',   1074: 'v',   1075: 'g',   1076: 'd',
@@ -51,7 +91,7 @@ var T1E = (function () {
  },
  decode: function(text,h){
   var res='',i=0,f=false,c1='',c2='';
-  var ff=String.fromCharCode;if(h)ff=function(v){return '&#'+v+';'};//u+v
+  var ff=String.fromCharCode;if(h)ff=function(v){return '&#'+v+';'};
   while(i < text.length){
    c1 = text.charAt(i); c2 = text.substring(i,i+2);  
    if(c2 === '~~'){res += '~';i+=2;continue;}
@@ -74,4 +114,31 @@ var T1E = (function () {
  charType: charType
  };//end return
 })();
+</script>
 
+<script>
+
+var input = document.getElementById('id_input');
+var put1 = document.getElementById('id_put1');
+var put2 = document.getElementById('id_put2');
+var str = document.getElementById('id_str');  
+str.textContent=T1E.toUnicode(str.textContent);
+put1.textContent='charset='+window.document.charset;
+function decode_text() {
+      // Кириллица через HTML-сущности (работает даже в windows-1251!)
+      let text=input.value;
+      put1.textContent = T1E.toUnicode(input.value);
+      put2.innerHTML = T1E.toHtml(input.value);
+}
+function encode_text() {
+      str.textContent= T1E.toTranslit(input.value);
+}
+
+  function testAlert() {
+    alert(T1E.toUnicode(input.value)+'/'+T1E.toHtml(input.value));
+  }
+
+</script>
+</body>
+</html>
+`;
